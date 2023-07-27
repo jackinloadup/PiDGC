@@ -34,3 +34,7 @@ This isn't a complicated process, but does require either a Linux system or WSL2
 
 ### Custom PCB
 The PCB was designed in EAGLE, and is located in `files/PiDGCv2-pcb`
+
+### Running with NIX
+1. `nix develop`
+2. `, run` or `, creator`
