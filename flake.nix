@@ -49,6 +49,7 @@
           buildInputs = with pkgs; [
             libsForQt5.qt5.qtmultimedia
             libsForQt5.qt5.qtserialport
+            libsForQt5.qt5.qtbase
             libsForQt5.qmake
             qtcreator
           ] ++ lib.optionals stdenv.isLinux [
