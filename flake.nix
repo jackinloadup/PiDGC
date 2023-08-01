@@ -32,12 +32,21 @@
             config.treefmt.build.devShell
             config.mission-control.devShell
           ];
-          #shellHook = ''
-          #'';
+          shellHook = ''
+            # Add Qt-related environment variables.
+            # https://discourse.nixos.org/t/python-qt-woes/11808/10 
+            setQtEnvironment=$(mktemp)
+            random=$(openssl rand -base64 20 | sed "s/[^a-zA-Z0-9]//g")
+            makeWrapper "$(type -p sh)" "$setQtEnvironment" "''${qtWrapperArgs[@]}" --argv0 "$random"
+            sed "/$random/d" -i "$setQtEnvironment"
+            source "$setQtEnvironment"
+          '';
           nativeBuildInputs = with pkgs; [
             #gnumake
             config.mission-control.wrapper
             config.treefmt.build.wrapper
+            qt5.wrapQtAppsHook
+            makeWrapper
           ];
           buildInputs = with pkgs; [
             #libsForQt5.full
@@ -72,6 +81,14 @@
               qtcreator source/display/display.pro
             '';
             description = "Open qtcreator project";
+          };
+
+          vmcreator = {
+            exec = ''
+            export QT_XCB_GL_INTEGRATION=xcb_egl
+            nix run --extra-experimental-features nix-command --extra-experimental-features flakes --override-input nixpkgs nixpkgs/nixos-21.11 --impure github:guibou/nixGL -- qtcreator source/display/display.pro
+            '';
+            description = "Open qtcreator project inside vm";
           };
 
           run = {

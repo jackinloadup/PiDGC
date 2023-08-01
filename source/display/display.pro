@@ -57,3 +57,8 @@ RESOURCES += \
 
 target.path += /root
 INSTALLS += target
+
+unix:!macx: LIBS += -L$$PWD/../../../../../../../nix/store/h9ac4iy06g41g0byaywmbyf2r1di613l-qt-full-5.15.9/lib/ -lQt5Multimedia
+
+INCLUDEPATH += $$PWD/../../../../../../../nix/store/h9ac4iy06g41g0byaywmbyf2r1di613l-qt-full-5.15.9/include
+DEPENDPATH += $$PWD/../../../../../../../nix/store/h9ac4iy06g41g0byaywmbyf2r1di613l-qt-full-5.15.9/include
