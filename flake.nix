@@ -55,6 +55,7 @@
           projectRootFile = "flake.nix";
           programs = {
             nixpkgs-fmt.enable = true;
+            clang-format.enable = false; # works but changes a lot of files
           };
         };
 
