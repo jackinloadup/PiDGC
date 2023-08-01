@@ -25,7 +25,7 @@
       perSystem = { config, self', pkgs, lib, system, ... }: {
 
         # Flake outputs
-        #packages = #TODO expose package for this
+        packages.default = pkgs.libsForQt5.callPackage ./source/display/package.nix { };
         devShells.default = pkgs.mkShell {
           inputsFrom = [
             config.flake-root.devShell
@@ -40,13 +40,12 @@
             config.treefmt.build.wrapper
           ];
           buildInputs = with pkgs; [
-            #libsForQt5.full
-            #libsForQt5.qt5.qtbase
             libsForQt5.qt5.qtmultimedia
             libsForQt5.qt5.qtserialport
-            libsForQt5.qt5.qtwayland
             libsForQt5.qmake
             qtcreator
+          ] ++ lib.optionals stdenv.isLinux [
+            libsForQt5.qt5.qtwayland
           ];
         };
 
@@ -64,7 +63,8 @@
         mission-control.scripts = {
           fmt = {
             exec = config.treefmt.build.wrapper;
-            description = "Auto-format project tree";
+            description = "Format the nix files";
+            category = "Tools";
           };
 
           creator = {
@@ -75,10 +75,7 @@
           };
 
           run = {
-            exec = ''
-              qmake -project source/display/display.pro
-              source/build-display-Desktop-Debug/display
-            '';
+            exec = self'.packages.default;
             description = "Run the project executable";
           };
 

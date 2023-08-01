@@ -55,5 +55,6 @@ FORMS += \
 RESOURCES += \
     resources.qrc
 
-target.path += /root
+target.path += $${PREFIX}/bin
+target.files = display
 INSTALLS += target
