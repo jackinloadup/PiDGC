@@ -3,6 +3,7 @@
     #nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs.url = github:nixos/nixpkgs/nixos-23.05;
     flake-parts.url = "github:hercules-ci/flake-parts";
+    nixgl.url = github:guibou/nixGL;
 
     # Dev tools
     treefmt-nix.url = "github:numtide/treefmt-nix";
@@ -23,6 +24,10 @@
         inputs.flake-root.flakeModule
       ];
       perSystem = { config, self', pkgs, lib, system, ... }: {
+        _module.args.pkgs = import inputs.nixpkgs {
+          inherit system;
+          overlays = [ inputs.nixgl.overlay ];
+        };
 
         # Flake outputs
         packages.default = pkgs.libsForQt5.callPackage ./source/display/package.nix { };
@@ -36,6 +41,8 @@
           #'';
           nativeBuildInputs = with pkgs; [
             #gnumake
+            #nixgl.auto.nixGLDefault # works with nvidia but --impure
+            nixgl.nixGLIntel
             config.mission-control.wrapper
             config.treefmt.build.wrapper
           ];
@@ -69,14 +76,22 @@
           };
 
           creator = {
-            exec = ''
-              qtcreator source/display/display.pro
-            '';
+            exec = "qtcreator source/display/display.pro";
+            description = "Open qtcreator project";
+          };
+
+          creatorgl = {
+            exec = "nixGLIntel qtcreator source/display/display.pro";
             description = "Open qtcreator project";
           };
 
           run = {
             exec = self'.packages.default;
+            description = "Run the project executable";
+          };
+
+          rungl = {
+            exec = "nixGLIntel ${lib.getExe self'.packages.default}";
             description = "Run the project executable";
           };
 
