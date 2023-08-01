@@ -51,6 +51,8 @@
             libsForQt5.qt5.qtserialport
             libsForQt5.qt5.qtbase
             libsForQt5.qmake
+            cmake
+            gdb
             qtcreator
           ] ++ lib.optionals stdenv.isLinux [
             libsForQt5.qt5.qtwayland
