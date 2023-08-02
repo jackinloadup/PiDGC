@@ -5,3 +5,10 @@
 moc_*
 /.idea/
 /source/rpi3-display/
+
+# nix build output
+result
+
+# qemu related files
+*.qcow2
+qemu_*
